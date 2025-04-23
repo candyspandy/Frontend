@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gyro Control Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --neon-pink: #FF2E6C;
+      --neon-blue: #00F3FF;
+      --neon-purple: #9D4EDD;
+      --dark-bg: #0B0B13;
+      --darker-bg: #060608;
+      --cyber-gradient: linear-gradient(135deg, rgba(255, 46, 108, 0.1), rgba(0, 243, 255, 0.1));
+      --glow-effect: 0 0 10px rgba(0, 243, 255, 0.5);
+      --box-shadow: 0 8px 32px 0 rgba(0, 243, 255, 0.2);
+    }
+
+    @keyframes neonFlicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 
+          0 0 5px var(--neon-blue),
+          0 0 10px var(--neon-blue),
+          0 0 20px var(--neon-blue);
+      }
+      20%, 24%, 55% {
+        text-shadow: none;
+      }
+    }
+
+    @keyframes borderGlow {
+      0% { border-color: var(--neon-pink); }
+      50% { border-color: var(--neon-blue); }
+      100% { border-color: var(--neon-pink); }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', sans-serif;
+      background: var(--dark-bg);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          transparent 0,
+          rgba(0, 243, 255, 0.03) 2px,
+          transparent 4px
+        );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: neonFlicker 1.5s infinite alternate;
+      position: relative;
+      z-index: 2;
+    }
+
+    .data-box {
+      background: var(--darker-bg);
+      padding: 2rem;
+      margin: 1.5rem auto;
+      width: 350px;
+      border: 2px solid var(--neon-blue);
+      border-radius: 15px;
+      box-shadow: var(--box-shadow);
+      animation: borderGlow 4s infinite;
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .data-box::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: var(--cyber-gradient);
+      border-radius: 15px;
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    .data-box p {
+      margin: 1rem 0;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: rgba(11, 11, 19, 0.6);
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      border-radius: 8px;
+      text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+    }
+
+    .data-box p strong {
+      color: var(--neon-pink);
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .data-box span {
+      font-family: 'Courier New', monospace;
+      color: var(--neon-blue);
+      font-weight: bold;
+      font-size: 1.3rem;
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.7);
+    }
+
+    button {
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--neon-blue);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    button:hover {
+      color: var(--darker-bg);
+      text-shadow: none;
+      box-shadow: 0 0 20px var(--neon-blue);
+    }
+
+    button:hover::before {
+      opacity: 1;
+    }
+
+    .timestamp {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-family: 'Courier New', monospace;
+      color: var(--neon-pink);
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .user-info {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      font-family: 'Courier New', monospace;
+      color: var(--neon-purple);
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .data-box {
+        width: 100%;
+        max-width: 320px;
+        padding: 1.5rem;
+      }
+
+      button {
+        width: 100%;
+        max-width: 320px;
+      }
+
+      .timestamp, .user-info {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- <div class="timestamp" style="display: flex;  ">UTC: 2025-04-23 05:13:27</div> -->
+  <!-- <div class="user-info">USER: </div> -->
+
+  <h1>📱 Gyro Control</h1>
+
+  <div class="data-box">
+    <p><strong>Alpha (Z):</strong> <span id="alpha">0</span>°</p>
+    <p><strong>Beta (X - pitch):</strong> <span id="beta">0</span>°</p>
+    <p><strong>Gamma (Y - roll):</strong> <span id="gamma">0</span>°</p>
+  </div>
+
+  <button onclick="sendCalibration()">🔄 Recalibrate</button>
+
+  <script>
+    const serverUrl = "https://spandanbackend.onrender.com";
+
+    let alpha = 0, beta = 0, gamma = 0;
+
+    window.addEventListener("deviceorientation", (event) => {
+      alpha = event.alpha || 0;
+      beta = event.beta || 0;
+      gamma = event.gamma || 0;
+
+      document.getElementById("alpha").innerText = alpha.toFixed(2);
+      document.getElementById("beta").innerText = beta.toFixed(2);
+      document.getElementById("gamma").innerText = gamma.toFixed(2);
+
+      fetch(serverUrl + "/post-gyro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ alpha, beta, gamma }),
+      }).catch(err => console.error("Failed to post gyro data", err));
+    });
+
+    function sendCalibration() {
+      fetch(serverUrl + "/calibrate", {
+        method: "POST"
+      })
+      .then(res => res.text())
+      .then(data => alert("Calibration triggered: " + data))
+      .catch(err => alert("Failed to recalibrate"));
+    }
+  </script>
+</body>
+</html>
